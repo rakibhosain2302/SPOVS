@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function masters(Request $request)
     {
-        return MasterProduct::where('status', 1)->get();
+        return MasterProduct::with('categories')->where('status', 1)->get();
     }
 
     public function categories($id)

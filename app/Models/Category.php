@@ -13,4 +13,9 @@ class Category extends Model
     {
         return $this->hasMany(Specification::class);
     }
+
+    public function masterProduct()
+    {
+        return $this->belongsTo(MasterProduct::class);
+    }
 }
