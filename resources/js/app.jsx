@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "../css/app.css";
 
 import Login from "./pages/admin/auth/login";
 import Register from "./pages/admin/auth/register";
@@ -20,6 +21,7 @@ import InvoicePage from "./pages/InvoicePage";
 import PrivateRoute from "./components/priviteRoute/privateRoute";
 import Home from "./pages/Home";
 import Tickets from "./pages/Tickets";
+import GuestDetails from "./pages/GuestDetails";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -34,6 +36,7 @@ const App = () => (
                 <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/tickets" element={<Tickets />} />
+                <Route path="/guest-details" element={<GuestDetails />} />
                 <Route
                     path="/admin"
                     element={

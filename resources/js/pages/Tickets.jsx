@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import { IoIosArrowBack } from "react-icons/io";
 import { CiCalendar } from "react-icons/ci";
@@ -45,6 +46,8 @@ const Tickets = () => {
     0
   );
 
+
+
   return (
     <>
       <NavBar />
@@ -89,7 +92,7 @@ const Tickets = () => {
                     <div className="col-lg-6 d-flex justify-content-lg-end mt-3 mt-lg-0">
                       <div className="d-flex align-items-center bg-light rounded-3 p-2">
                         <button
-                          className="btn btn-sm border rounded-3"
+                          className="btn btn-sm rounded-3 decrement-btn"
                           onClick={() => handleDecrement(ticket.id)}
                           disabled={ticket.quantity === 0}
                         >
@@ -101,7 +104,7 @@ const Tickets = () => {
                         </span>
 
                         <button
-                          className="btn btn-sm border rounded-3"
+                          className="btn btn-sm rounded-3 increment-btn"
                           onClick={() => handleIncrement(ticket.id)}
                           disabled={ticket.quantity === 10}
                         >
@@ -140,10 +143,10 @@ const Tickets = () => {
                   .map((ticket) => (
                     <div key={ticket.id} className="mt-3 border-bottom pb-2">
                       <div className="d-flex justify-content-between">
-                        <span className="text-white">
+                        <span className="text-white" style={{ fontSize: "14px" }}>
                           {ticket.name} x{ticket.quantity}
                         </span>
-                        <span className="text-white fw-bold">
+                        <span className="text-white fw-bold" style={{ fontSize: "14px" }}>
                           ${(ticket.price * ticket.quantity).toFixed(2)}
                         </span>
                       </div>
@@ -159,9 +162,10 @@ const Tickets = () => {
                 </div>
 
                 <button
-                  className="btn btn-light w-100 mt-4 fw-bold"
-                  style={{ color: "#323185" }}
+                  className="btn btn-light w-75 mx-auto mt-4 fw-bold"
+                  style={{ color: "#323185", fontSize: "24px" }}
                   disabled={totalAmount === 0}
+  
                 >
                   Continue
                 </button>

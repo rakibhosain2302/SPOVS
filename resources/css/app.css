@@ -4,3 +4,28 @@
 body {
     background-color: #f8f9fa;
 }
+
+.increment-btn {
+    border: 1px solid #ccc;
+    width: 40px;
+    height: 40px;
+}
+
+.decrement-btn {
+    border: 1px solid #ccc;
+    width: 40px;
+    height: 40px;
+}
+
+.increment-btn:hover {
+    background-color: #f0fcf4;
+
+    border: 1px solid #28a745;
+}
+
+.decrement-btn:hover {
+    background-color: #fcf2f2;
+    border: 1px solid #dc3545;
+}
+
+
