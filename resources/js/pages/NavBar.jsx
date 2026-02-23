@@ -39,7 +39,7 @@ const NavBar = () => {
 
                         <li className="nav-item">
                             <NavLink
-                                to="#"
+                                to="/tickets"
                                 className={({ isActive }) =>
                                     "nav-link fw-semibold px-3 rounded-pill transition " +
                                     (isActive ? "active text-primary bg-light" : "text-light")

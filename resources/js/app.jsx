@@ -19,6 +19,7 @@ import PaymentPage from "./pages/PaymentPage";
 import InvoicePage from "./pages/InvoicePage";
 import PrivateRoute from "./components/priviteRoute/privateRoute";
 import Home from "./pages/Home";
+import Tickets from "./pages/Tickets";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -32,6 +33,7 @@ const App = () => (
 
                 <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
                 <Route path="/home" element={<Home />} />
+                <Route path="/tickets" element={<Tickets />} />
                 <Route
                     path="/admin"
                     element={
