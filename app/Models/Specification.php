@@ -2,15 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Specification extends Model
 {
-    use HasFactory;
-    protected $fillable = ['category_id', 'name'];
-    public function price()
+    protected $table = 'product_specs';
+    protected $fillable = ['base_id', 'category_id', 'spec_name'];
+
+    public function base()
     {
-        return $this->hasOne(ProductPrice::class);
+        return $this->belongsTo(ProductBase::class, 'base_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 }
