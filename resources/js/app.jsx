@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "../css/app.css";
 
+import NavBar from "./pages/layouts/NavBar";
+import Footer from "./pages/layouts/Footer";
 import Login from "./pages/admin/auth/login";
 import Register from "./pages/admin/auth/register";
 import Dashboard from "./pages/admin/auth/dashboard";
@@ -25,58 +27,69 @@ import GuestDetails from "./pages/GuestDetails";
 
 import { CartProvider } from "./context/CartContext";
 
+
 const App = () => (
     <BrowserRouter>
         <CartProvider>
-            <Routes>
-                <Route path="/" element={<Navigate to="/home" replace />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
 
-                <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/tickets" element={<Tickets />} />
-                <Route path="/guest-details" element={<GuestDetails />} />
-                <Route
-                    path="/admin"
-                    element={
-                        <PrivateRoute>
-                            <AdminLayout />
-                        </PrivateRoute>
-                    }
-                >
-                    <Route index element={<Dashboard />} />
-                    <Route path="product-base" element={<ProductBaseForm />} />
-                    <Route path="category" element={<CategoryForm />} />
-                    <Route path="specification" element={<SpecificationForm />} />
-                    <Route path="master" element={<ProductMasterForm />} />
-                </Route>
+            <div className="app-wrapper">
+                {/* 👇 NavBar সবসময় উপরে থাকবে */}
+                <NavBar />
+                <Routes>
+                    <Route path="/" element={<Navigate to="/home" replace />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
 
-                <Route
-                    path="/order"
-                    element={
-                        <PrivateRoute>
-                            <OrderPage />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/payment/:method"
-                    element={
-                        <PrivateRoute>
-                            <PaymentPage />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/payment/invoice"
-                    element={
-                        <PrivateRoute>
-                            <InvoicePage />
-                        </PrivateRoute>
-                    }
-                />
-            </Routes>
+                    <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/tickets" element={<Tickets />} />
+                    <Route path="/guest-details" element={<GuestDetails />} />
+
+                    <Route
+                        path="/admin"
+                        element={
+                            <PrivateRoute>
+                                <AdminLayout />
+                            </PrivateRoute>
+                        }
+                    >
+                        <Route index element={<Dashboard />} />
+                        <Route path="product-base" element={<ProductBaseForm />} />
+                        <Route path="category" element={<CategoryForm />} />
+                        <Route path="specification" element={<SpecificationForm />} />
+                        <Route path="master" element={<ProductMasterForm />} />
+                    </Route>
+
+                    <Route
+                        path="/order"
+                        element={
+                            <PrivateRoute>
+                                <OrderPage />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/payment/:method"
+                        element={
+                            <PrivateRoute>
+                                <PaymentPage />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/payment/invoice"
+                        element={
+                            <PrivateRoute>
+                                <InvoicePage />
+                            </PrivateRoute>
+                        }
+                    />
+                </Routes>
+
+                {/* 👇 Footer সবসময় নিচে থাকবে */}
+                <Footer />
+
+            </div>
 
             <ToastContainer
                 position="top-right"
@@ -87,6 +100,7 @@ const App = () => (
                 pauseOnHover
                 theme="colored"
             />
+
         </CartProvider>
     </BrowserRouter>
 );

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./NavBar";
+import NavBar from "./layouts/NavBar";
 import { IoIosArrowBack } from "react-icons/io";
 import { CiCalendar } from "react-icons/ci";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { toast } from "react-toastify";
+
 
 const ticketData = [
   { id: 1, name: "Standard Entry", price: 25 },
@@ -47,10 +49,21 @@ const Tickets = () => {
   );
 
 
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    const selectedTickets = tickets.filter((ticket) => ticket.quantity > 0);
+    if (selectedTickets.length === 0) {
+      toast.error("Please select at least one ticket.");
+      return;
+    }
+    navigate("/guest-details");
+  }
+
+
 
   return (
     <>
-      <NavBar />
       <div className="container mt-5">
         <div className="w-75 mx-auto">
           <div className="d-flex align-items-center mb-4">
@@ -165,7 +178,7 @@ const Tickets = () => {
                   className="btn btn-light w-75 mx-auto mt-4 fw-bold"
                   style={{ color: "#323185", fontSize: "24px" }}
                   disabled={totalAmount === 0}
-  
+                  onClick={handleContinue}
                 >
                   Continue
                 </button>

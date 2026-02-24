@@ -28,4 +28,62 @@ body {
     border: 1px solid #dc3545;
 }
 
+/* guest details page styles */
 
+.guest-details-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.form-label,
+.form-control {
+    color: #495057;
+    background-color: #FAFAFA;   
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.checkbox-terms{
+    background-color: #FAFAFA;
+    padding: 15px 35px;
+    border-radius: 10px;
+    color: #495057;
+}
+
+/* footer styles */
+
+html, body, #app {
+  height: 100%;
+  margin: 0;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-wrapper > *:first-child {
+  flex: 1;
+}
+
+.footer {
+  color: white;
+  text-align: center;
+}
+
+/* Compact navbar adjustments */
+.navbar {
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+}
+.navbar .navbar-brand {
+    line-height: 1;
+}
+.navbar .nav-link {
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+}
