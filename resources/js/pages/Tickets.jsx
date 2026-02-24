@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./layouts/NavBar";
 import { IoIosArrowBack } from "react-icons/io";
 import { CiCalendar } from "react-icons/ci";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
+
+import { useCart } from "../context/CartContext";
 
 
 const ticketData = [
@@ -15,6 +16,8 @@ const ticketData = [
 ];
 
 const Tickets = () => {
+  const { setTickets: setCartTickets } = useCart();
+
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -53,6 +56,7 @@ const Tickets = () => {
 
   const handleContinue = () => {
     const selectedTickets = tickets.filter((ticket) => ticket.quantity > 0);
+      setCartTickets(selectedTickets);
     if (selectedTickets.length === 0) {
       toast.error("Please select at least one ticket.");
       return;
@@ -179,6 +183,7 @@ const Tickets = () => {
                   style={{ color: "#323185", fontSize: "24px" }}
                   disabled={totalAmount === 0}
                   onClick={handleContinue}
+
                 >
                   Continue
                 </button>

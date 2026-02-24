@@ -24,6 +24,8 @@ import PrivateRoute from "./components/priviteRoute/privateRoute";
 import Home from "./pages/Home";
 import Tickets from "./pages/Tickets";
 import GuestDetails from "./pages/GuestDetails";
+import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -33,9 +35,9 @@ const App = () => (
         <CartProvider>
 
             <div className="app-wrapper">
-                {/* 👇 NavBar সবসময় উপরে থাকবে */}
                 <NavBar />
-                <Routes>
+                <main className="app-content">
+                    <Routes>
                     <Route path="/" element={<Navigate to="/home" replace />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
@@ -44,6 +46,9 @@ const App = () => (
                     <Route path="/home" element={<Home />} />
                     <Route path="/tickets" element={<Tickets />} />
                     <Route path="/guest-details" element={<GuestDetails />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/order-confirmation" element={<OrderConfirmation />} />
+
 
                     <Route
                         path="/admin"
@@ -84,7 +89,8 @@ const App = () => (
                             </PrivateRoute>
                         }
                     />
-                </Routes>
+                    </Routes>
+                </main>
 
                 {/* 👇 Footer সবসময় নিচে থাকবে */}
                 <Footer />

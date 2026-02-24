@@ -4,9 +4,8 @@ import { NavLink } from "react-router-dom";
 const NavBar = () => {
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2">
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
                 <div className="container">
-
                     {/* Logo */}
                     <NavLink className="navbar-brand fw-bold fs-5 text-uppercase" to="/">
                         <span className="text-primary">Product</span> System

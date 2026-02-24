@@ -5,6 +5,31 @@ body {
     background-color: #f8f9fa;
 }
 
+.common-color{
+    color: #432dd7;
+}
+
+/* Layout: make wrapper full height so footer can stick to bottom */
+html, body, #app {
+    height: 100%;
+}
+
+.app-wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-content {
+    flex: 1 0 auto; /* grow and take available space */
+}
+
+.footer {
+  color: white;
+  text-align: center;
+  flex-shrink: 0;
+}
+
 .increment-btn {
     border: 1px solid #ccc;
     width: 40px;
@@ -53,33 +78,15 @@ body {
     color: #495057;
 }
 
+/* checkout styles*/
+
+
 /* footer styles */
 
-html, body, #app {
-  height: 100%;
-  margin: 0;
-}
 
-.app-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.app-wrapper > *:first-child {
-  flex: 1;
-}
-
-.footer {
-  color: white;
-  text-align: center;
-}
 
 /* Compact navbar adjustments */
-.navbar {
-    padding-top: 0.35rem !important;
-    padding-bottom: 0.35rem !important;
-}
+
 .navbar .navbar-brand {
     line-height: 1;
 }
