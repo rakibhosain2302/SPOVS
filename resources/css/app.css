@@ -78,7 +78,136 @@ html, body, #app {
     color: #495057;
 }
 
-/* checkout styles*/
+/* ================= MODERN CARD ================= */
+.card {
+  border: none;
+  transition: 0.3s ease;
+}
+
+/* Dynamic Background (Soft Gradient) */
+.card.dynamic-bKash {
+  background: linear-gradient(135deg, #e2136e, #ff4fa3);
+  color: #fff;
+}
+
+.card.dynamic-Nagad {
+  background: linear-gradient(135deg, #ee4622, #ff7a59);
+  color: #fff;
+}
+
+.card.dynamic-Rocket {
+  background: linear-gradient(135deg, #8b3392, #b86adf);
+  color: #fff;
+}
+
+/* ================= BUTTONS ================= */
+.method-btn .btn {
+  border-radius: 50px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* White Style Buttons */
+.border-bkash,
+.border-nagad,
+.border-rocket,
+.btn-outline-bkash,
+.btn-outline-nagad,
+.btn-outline-rocket {
+  background: #fff !important;
+}
+
+/* Outline Colors */
+.border-bkash,
+.btn-outline-bkash {
+  border: 2px solid #e2136e;
+  color: #e2136e;
+}
+
+.border-nagad,
+.btn-outline-nagad {
+  border: 2px solid #ee4622;
+  color: #ee4622;
+}
+
+.border-rocket,
+.btn-outline-rocket {
+  border: 2px solid #8b3392;
+  color: #8b3392;
+}
+
+/* Hover Animation */
+
+.border-bkash:hover,
+.btn-outline-bkash:hover{
+    color: #e2136e;
+}
+
+.border-nagad:hover,
+.btn-outline-nagad:hover{
+    color: #ee4622;
+}
+
+.border-rocket:hover,
+.btn-outline-rocket:hover{
+    color: #8b3392;
+}
+
+
+.method-btn .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* ================= PAY BUTTON ================= */
+.pay-btn {
+  border-radius: 50px;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+
+.pay-btn-bKash:hover{
+    background: #fff !important;
+    color: #e2136e;
+}
+.pay-btn-Nagad:hover{
+    background: #fff !important;
+    color: #ee4622;
+}
+.pay-btn-Rocket:hover{
+    background: #fff !important;
+    color: #8b3392;
+}
+
+/* White Pay Button when mobile selected */
+.pay-btn-bKash,
+.pay-btn-Nagad,
+.pay-btn-Rocket {
+  background: #fff;
+  border: none;
+}
+
+/* Text Colors */
+.pay-btn-bKash { color: #e2136e; }
+.pay-btn-Nagad { color: #ee4622; }
+.pay-btn-Rocket { color: #8b3392; }
+
+/* Pay Button Hover */
+.pay-btn:hover:not(:disabled) {
+  transform: scale(1.008);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+/* Disabled */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 
 /* footer styles */

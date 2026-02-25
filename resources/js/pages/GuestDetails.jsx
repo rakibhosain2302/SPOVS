@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 
 const GuestDetails = () => {
   const navigate = useNavigate();
-  const { setGuestInfo } = useCart();
+  const { guestInfo, setGuestInfo } = useCart();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -14,12 +14,21 @@ const GuestDetails = () => {
     terms: false,
   });
 
+
+  useEffect(() => {
+    if (guestInfo) {
+      setFormData(guestInfo);
+    }
+  }, [guestInfo]);
+
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
-    setFormData({
+    const updatedFormData = {
       ...formData,
       [id]: type === "checkbox" ? checked : value,
-    });
+    };
+    setFormData(updatedFormData);
+    setGuestInfo(updatedFormData);
   };
 
   const isFormValid =
@@ -29,13 +38,17 @@ const GuestDetails = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isFormValid) {
-      setGuestInfo(formData);
-      navigate("/checkout");
-    }else{
-        toast.error("Please fill in all required fields and accept the terms.");
+
+    if (!isFormValid) {
+      toast.error(
+        "Please fill in all required fields and accept the terms."
+      );
+      return;
     }
+
+    navigate("/checkout");
   };
+
 
   return (
     <div className="container mt-4 mb-5">
