@@ -9,7 +9,7 @@ const GuestDetails = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    mobile: "",
+    phone: "",
     email: "",
     terms: false,
   });
@@ -32,8 +32,8 @@ const GuestDetails = () => {
   };
 
   const isFormValid =
-    formData.name.trim() !== "" &&
-    formData.mobile.trim() !== "" &&
+    (formData.name || "").trim() !== "" &&
+    (formData.phone || "").trim() !== "" &&
     formData.terms === true;
 
   const handleSubmit = (e) => {
@@ -78,8 +78,8 @@ const GuestDetails = () => {
                 <input
                   type="text"
                   className="form-control p-3"
-                  id="mobile"
-                  value={formData.mobile}
+                  id="phone"
+                  value={formData.phone}
                   onChange={handleChange}
                   placeholder="+8801000000000"
                 />

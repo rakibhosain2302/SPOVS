@@ -1,18 +1,86 @@
 import React, { useState } from "react";
+import api from "../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
 
 const PaymentPage = () => {
   const { method } = useParams();
   const navigate = useNavigate();
-  const { totalAmount } = useCart();
+  const { totalAmount, placeOrder, tickets, guestInfo, paymentMethod } = useCart();
 
   const [selectedMobile, setSelectedMobile] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [cardNumber, setCardNumber] = useState("");
 
-  const handlePayment = () => {
-    navigate("/order-confirmation");
+  const handlePayment = async () => {
+    try {
+
+      const orderData = {
+        name: guestInfo.name,
+        phone: guestInfo.phone,
+        email: guestInfo.email,
+        terms: true,
+
+        payment_method: method === "mobile" ? selectedMobile : "card",
+
+        // 🔥 এটা array হওয়া লাগবে (backend validation অনুযায়ী)
+        payment_details: method === "mobile"
+          ? { number: mobileNumber }
+          : { card_number: cardNumber },
+
+        items: tickets
+          .filter(ticket => ticket.quantity > 0)
+          .map(ticket => ({
+            product_id: ticket.id,
+            quantity: ticket.quantity,
+            price: ticket.price,
+          })),
+      };
+
+      // 🔥 await লাগবে
+      const response = await api.post("/orders", orderData);
+
+      toast.success("Payment Successfully");
+
+      // Map server response to the shape our OrderConfirmation expects
+      const respOrder = response.data.order || response.data;
+
+      const mappedOrder = {
+        id: respOrder.id,
+        date: respOrder.order_date || respOrder.created_at || null,
+        guest: {
+          name: respOrder.guest?.name || guestInfo?.name || "",
+          email: respOrder.guest?.email || guestInfo?.email || "",
+          phone: respOrder.guest?.phone || guestInfo?.phone || "",
+        },
+        tickets: (respOrder.items || orderData.items || []).map(item => ({
+          id: item.product?.id || item.product_id || item.id,
+          name: item.product?.name || item.name || item.title || "",
+          quantity: item.quantity,
+          price: Number(item.price),
+        })),
+        total: respOrder.total_amount || respOrder.total || totalAmount,
+        qr: respOrder.qr || respOrder.qr_codes || [],
+      };
+
+  // store the order in context and clear cart/guest info via placeOrder
+  placeOrder(mappedOrder);
+
+  // Clear localStorage keys manually for extra safety
+  localStorage.removeItem("tickets");
+  localStorage.removeItem("guestInfo");
+  localStorage.removeItem("paymentMethod");
+
+  // Reload the page so all components re-mount and show fresh state
+  // (this ensures going back doesn't show old data)
+  const orderId = respOrder.id || mappedOrder.id;
+  window.location.href = `/order-confirmation/${orderId}`;
+
+    } catch (error) {
+      console.error(error.response?.data);
+      toast.error("Payment Failed");
+    }
   };
 
   return (

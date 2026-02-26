@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductMasterController;
 use App\Http\Controllers\Api\SpecController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,12 @@ Route::apiResource('bases', BaseController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('specifications', SpecController::class);
 Route::apiResource('master_products', ProductMasterController::class);
+
+// BookingControllers
+
+// Route::post('/guest', [BookingController::class, 'saveGuest']);
+
+Route::get('/tickets-list', [BookingController::class, 'tickets']);
+Route::post('/orders', [BookingController::class, 'placeOrder']);
+Route::get('/orders/{id}', [BookingController::class, 'orderConfirmation']); 
 

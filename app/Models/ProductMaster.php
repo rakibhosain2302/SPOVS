@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ProductSpec;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductMaster extends Model
@@ -26,8 +27,8 @@ class ProductMaster extends Model
         return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 
-    public function specification()
+    public function specs()
     {
-        return $this->belongsTo(Specification::class, 'specification_id');
+        return $this->belongsTo(ProductSpec::class, 'specification_id');
     }
 }

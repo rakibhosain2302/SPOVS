@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Specification extends Model
+class ProductSpec extends Model
 {
     protected $table = 'product_specs';
     protected $fillable = ['base_id', 'category_id', 'spec_name'];
@@ -17,5 +17,10 @@ class Specification extends Model
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(ProductMaster::class, 'specification_id');
     }
 }

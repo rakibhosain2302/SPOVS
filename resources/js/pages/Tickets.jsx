@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { CiCalendar } from "react-icons/ci";
@@ -7,31 +7,36 @@ import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 
 const Tickets = () => {
-  const { tickets, setTickets, totalAmount } = useCart();
+  const { tickets, setTickets, fetchTickets, totalAmount } = useCart();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
 
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
 
+
   const handleIncrement = (id) => {
-    setTickets((prev) =>
-      prev.map((ticket) =>
-        ticket.id === id && ticket.quantity < 10
-          ? { ...ticket, quantity: ticket.quantity + 1 }
-          : ticket
-      )
-    );
+    setTickets(prev =>
+      prev.map(t =>
+        t.id === id ?
+          {
+            ...t, quantity:
+              Math.min(t.quantity + 1, 10)
+          }: t));
   };
 
   const handleDecrement = (id) => {
-    setTickets((prev) =>
-      prev.map((ticket) =>
-        ticket.id === id && ticket.quantity > 0
-          ? { ...ticket, quantity: ticket.quantity - 1 }
-          : ticket
-      )
-    );
+    setTickets(prev =>
+      prev.map(t =>
+        t.id === id ?
+          {
+            ...t, quantity:
+              Math.max(t.quantity - 1, 0)
+          } : t));
   };
 
   const handleContinue = () => {
