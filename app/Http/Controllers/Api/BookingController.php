@@ -26,7 +26,7 @@ class BookingController extends Controller
 
             return [
                 'id' => $ticket->id,
-                'name' => $specName ? ($specName . ' - ' . $ticket->name) : $ticket->name,
+                'name' => $specName ? $specName : $ticket->name,
                 'price' => $ticket->price,
                 'available_quantity' => $ticket->available_quantity,
             ];
