@@ -19,10 +19,10 @@ class BookingController extends Controller
     public function tickets()
     {
         // Eager load the spec relation (note: relation is named `specs` on ProductMaster)
-        $tickets = ProductMaster::with('specs')->get();
+        $tickets = ProductMaster::with('specification')->get();
 
         $formatted = $tickets->map(function ($ticket) {
-            $specName = optional($ticket->specs)->spec_name;
+            $specName = optional($ticket->specification)->spec_name;
 
             return [
                 'id' => $ticket->id,

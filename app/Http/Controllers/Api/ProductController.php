@@ -3,13 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\ProductBase;
-use App\Models\Specification;
+use App\Models\ProductCategory;
+use App\Models\ProductSpec;
 
 class ProductController extends Controller
 {
+
+    public function orderList()
+    {
+        $order = Order::get();
+        return response()->json($order);
+    }
+
     public function bases()
     {
         $bases = ProductBase::all();
@@ -31,7 +39,7 @@ class ProductController extends Controller
 
     public function categories($base_id)
     {
-        $categories = Category::where('base_id', $base_id)->get();
+        $categories = ProductCategory::where('base_id', $base_id)->get();
         return response()->json($categories);
     }
 
@@ -42,7 +50,7 @@ class ProductController extends Controller
             'base_id' => 'required|exists:products_base,id',
         ]);
 
-        $category = Category::create([
+        $category = ProductCategory::create([
             'name' => $request->name,
             'base_id' => $request->base_id
         ]);
@@ -52,7 +60,7 @@ class ProductController extends Controller
 
     public function specs($base_id, $category_id)
     {
-        $specs = Specification::where('base_id', $base_id)
+        $specs = ProductSpec::where('base_id', $base_id)
             ->where('category_id', $category_id)
             ->get();
 
@@ -67,7 +75,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:products_categories,id',
         ]);
 
-        $spec = Specification::create([
+        $spec = ProductSpec::create([
             'name' => $request->name,
             'base_id' => $request->base_id,
             'category_id' => $request->category_id

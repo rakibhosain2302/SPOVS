@@ -30,72 +30,69 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import { CartProvider } from "./context/CartContext";
 
 
+
+
 const App = () => (
     <BrowserRouter>
         <CartProvider>
 
-            <div className="app-wrapper">
-                <NavBar />
-                <main className="app-content">
-                    <Routes>
-                    <Route path="/" element={<Navigate to="/home" replace />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
 
-                    <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/tickets" element={<Tickets />} />
-                    <Route path="/guest-details" element={<GuestDetails />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
+            {/* User Interface Routes with NavBar */}
+            <Routes>
+                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
+                <Route path="/home" element={<><NavBar /><Home /></>} />
+                <Route path="/tickets" element={<><NavBar /><Tickets /></>} />
+                <Route path="/guest-details" element={<><NavBar /><GuestDetails /></>} />
+                <Route path="/checkout" element={<><NavBar /><Checkout /></>} />
+                <Route path="/order-confirmation/:id" element={<><NavBar /><OrderConfirmation /></>} />
 
+                {/* Admin Panel Routes without NavBar */}
+                <Route
+                    path="/admin"
+                    element={
+                        <PrivateRoute>
+                            <AdminLayout />
+                        </PrivateRoute>
+                    }
+                >
+                    <Route index element={<Dashboard />} />
+                    <Route path="product-base" element={<ProductBaseForm />} />
+                    <Route path="category" element={<CategoryForm />} />
+                    <Route path="specification" element={<SpecificationForm />} />
+                    <Route path="master" element={<ProductMasterForm />} />
+                </Route>
 
-                    <Route
-                        path="/admin"
-                        element={
-                            <PrivateRoute>
-                                <AdminLayout />
-                            </PrivateRoute>
-                        }
-                    >
-                        <Route index element={<Dashboard />} />
-                        <Route path="product-base" element={<ProductBaseForm />} />
-                        <Route path="category" element={<CategoryForm />} />
-                        <Route path="specification" element={<SpecificationForm />} />
-                        <Route path="master" element={<ProductMasterForm />} />
-                    </Route>
+                <Route
+                    path="/order"
+                    element={
+                        <PrivateRoute>
+                            <OrderPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/payment/:method"
+                    element={
+                        <PrivateRoute>
+                            <PaymentPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/payment/invoice"
+                    element={
+                        <PrivateRoute>
+                            <InvoicePage />
+                        </PrivateRoute>
+                    }
+                />
+            </Routes>
 
-                    <Route
-                        path="/order"
-                        element={
-                            <PrivateRoute>
-                                <OrderPage />
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route
-                        path="/payment/:method"
-                        element={
-                            <PrivateRoute>
-                                <PaymentPage />
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route
-                        path="/payment/invoice"
-                        element={
-                            <PrivateRoute>
-                                <InvoicePage />
-                            </PrivateRoute>
-                        }
-                    />
-                    </Routes>
-                </main>
-
-                {/* 👇 Footer সবসময় নিচে থাকবে */}
-                <Footer />
-
-            </div>
+            {/* 👇 Footer সবসময় নিচে থাকবে */}
+            <Footer />
 
             <ToastContainer
                 position="top-right"

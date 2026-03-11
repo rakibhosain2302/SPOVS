@@ -27,7 +27,7 @@ class ProductMaster extends Model
         return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 
-    public function specs()
+    public function specification()
     {
         return $this->belongsTo(ProductSpec::class, 'specification_id');
     }

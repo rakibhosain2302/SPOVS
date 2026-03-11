@@ -18,6 +18,6 @@ class ProductBase extends Model
 
     public function specs()
     {
-        return $this->hasMany(Specification::class, 'base_id');
+        return $this->hasMany(ProductSpec::class, 'base_id');
     }
 }

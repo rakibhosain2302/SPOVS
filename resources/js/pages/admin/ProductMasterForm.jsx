@@ -6,7 +6,7 @@ import { FaRegEdit } from "react-icons/fa";
 
 
 
-export default function SpecificationForm() {
+export default function ProductMasterForm() {
     const [price, setPrice] = useState("");
     const [baseId, setBaseId] = useState("");
     const [bases, setBases] = useState([]);
@@ -36,9 +36,11 @@ export default function SpecificationForm() {
     };
 
     const productsfetch = async () => {
-        const res = await api.get("/master_products");
-        setProducts(res.data);
+    const res = await api.get("/master_products");
+    console.log('Product master API response:', res.data);
+    setProducts(Array.isArray(res.data) ? res.data : (res.data.data || []));
     };
+    
 
     useEffect(() => {
         basesfetch();
@@ -215,17 +217,23 @@ export default function SpecificationForm() {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((product, index) => (
-                            <tr key={product.id}>
-                                <td>{index + 1}</td>
-                                <td>{product.name}</td>
-                                <td>{product.price}</td>
-                                <td className="d-flex gap-2">
-                                    <button className="btn btn-sm btn-outline-success rounded" onClick={() => handleEdit(product.id)}><FaRegEdit size={18} /></button>
-                                    <button className="btn btn-sm btn-outline-danger rounded" onClick={() => handleDelete(product.id)}><RiDeleteBin5Line size={18} /></button>
-                                </td>
+                        {products.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="text-center">No products found.</td>
                             </tr>
-                        ))}
+                        ) : (
+                            products.map((product, index) => (
+                                <tr key={product.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{product.name}</td>
+                                    <td>{product.price}</td>
+                                    <td className="d-flex gap-2">
+                                        <button className="btn btn-sm btn-outline-success rounded" onClick={() => handleEdit(product.id)}><FaRegEdit size={18} /></button>
+                                        <button className="btn btn-sm btn-outline-danger rounded" onClick={() => handleDelete(product.id)}><RiDeleteBin5Line size={18} /></button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
