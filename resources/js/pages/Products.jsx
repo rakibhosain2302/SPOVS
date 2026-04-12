@@ -6,12 +6,12 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 
-const Tickets = () => {
-  const { tickets, setTickets, fetchTickets, totalAmount } = useCart();
+const Products = () => {
+  const { products, setProducts, fetchProducts, totalAmount } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTickets();
+    fetchProducts();
   }, []);
 
   const [selectedDate, setSelectedDate] = useState(
@@ -20,7 +20,7 @@ const Tickets = () => {
 
 
   const handleIncrement = (id) => {
-    setTickets(prev =>
+    setProducts(prev =>
       prev.map(t =>
         t.id === id ?
           {
@@ -30,7 +30,7 @@ const Tickets = () => {
   };
 
   const handleDecrement = (id) => {
-    setTickets(prev =>
+    setProducts(prev =>
       prev.map(t =>
         t.id === id ?
           {
@@ -40,16 +40,16 @@ const Tickets = () => {
   };
 
   const handleContinue = () => {
-    const selectedTickets = tickets.filter(
-      (ticket) => ticket.quantity > 0
+    const selectedProducts = products.filter(
+      (product) => product.quantity > 0
     );
 
-    if (selectedTickets.length === 0) {
-      toast.error("Please select at least one ticket.");
+    if (selectedProducts.length === 0) {
+      toast.error("Please select at least one product.");
       return;
     }
 
-    navigate("/guest-details");
+    navigate("/customer-details");
   };
 
   return (
@@ -57,7 +57,7 @@ const Tickets = () => {
       <div className="w-75 mx-auto">
         <div className="d-flex align-items-center mb-4">
           <IoIosArrowBack size={22} />
-          <h3 className="ms-2 fw-bold">Select Your Tickets</h3>
+          <h3 className="ms-2 fw-bold">Select Your Products</h3>
         </div>
 
         <div className="row">
@@ -77,18 +77,18 @@ const Tickets = () => {
             </div>
 
             {/* Ticket Cards */}
-            {tickets.map((ticket) => (
+            {products.map((product) => (
               <div
-                key={ticket.id}
+                key={product.id}
                 className="card p-4 shadow-sm rounded-4 mb-3"
               >
                 <div className="row align-items-center">
                   <div className="col-lg-6">
                     <h6 className="fw-semibold mb-1">
-                      {ticket.name}
+                      {product.name}
                     </h6>
                     <small className="text-muted">
-                      ${ticket.price}.00 / Person
+                      ${product.price}.00 / Person
                     </small>
                   </div>
 
@@ -96,20 +96,20 @@ const Tickets = () => {
                     <div className="d-flex align-items-center bg-light rounded-3 p-2">
                       <button
                         className="btn btn-sm rounded-3 decrement-btn"
-                        onClick={() => handleDecrement(ticket.id)}
-                        disabled={ticket.quantity === 0}
+                        onClick={() => handleDecrement(product.id)}
+                        disabled={product.quantity === 0}
                       >
                         <FaMinus />
                       </button>
 
                       <span className="mx-3 fw-bold">
-                        {ticket.quantity}
+                        {product.quantity}
                       </span>
 
                       <button
                         className="btn btn-sm rounded-3 increment-btn"
-                        onClick={() => handleIncrement(ticket.id)}
-                        disabled={ticket.quantity === 10}
+                        onClick={() => handleIncrement(product.id)}
+                        disabled={product.quantity === 10}
                       >
                         <FaPlus />
                       </button>
@@ -141,11 +141,11 @@ const Tickets = () => {
                 </span>
               </div>
 
-              {tickets
-                .filter((ticket) => ticket.quantity > 0)
-                .map((ticket) => (
+              {products
+                .filter((product) => product.quantity > 0)
+                .map((product) => (
                   <div
-                    key={ticket.id}
+                    key={product.id}
                     className="mt-3 border-bottom pb-2"
                   >
                     <div className="d-flex justify-content-between">
@@ -153,7 +153,7 @@ const Tickets = () => {
                         className="text-white"
                         style={{ fontSize: "14px" }}
                       >
-                        {ticket.name} x{ticket.quantity}
+                        {product.name} x{product.quantity}
                       </span>
                       <span
                         className="text-white fw-bold"
@@ -161,7 +161,7 @@ const Tickets = () => {
                       >
                         $
                         {(
-                          ticket.price * ticket.quantity
+                          product.price * product.quantity
                         ).toFixed(2)}
                       </span>
                     </div>
@@ -196,4 +196,4 @@ const Tickets = () => {
   );
 };
 
-export default Tickets;
+export default Products;

@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use HasUuid;
+
     protected $table = 'orders';
 
     protected $fillable = [
-        'guest_id',
-        'total_amount',
+        'uuid',
+        'customer_id',
+        'total',
         'payment_method',
         'payment_details',
-        'status',
+        'payment_status',
         'order_date',
     ];
 
@@ -24,9 +28,9 @@ class Order extends Model
         'payment_details' => 'array',
     ];
 
-    public function guest()
+    public function customer()
     {
-        return $this->belongsTo(Guest::class, 'guest_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function items()

@@ -26,14 +26,19 @@ const OrderConfirmation = () => {
       setError(null);
       try {
         const res = await api.get(`/orders/${id}`);
-        // API returns the order object directly
-        const o = res.data;
+        // API returns the order object directly (OR wrapped in .order)
+        const o = res.data.order || res.data;
 
         // Map API shape to UI-friendly shape used below
         const mapped = {
           id: o.id,
+          uuid: o.uuid || "",
           date: o.order_date || o.created_at || null,
-          guest: o.guest || { name: "", email: "", phone: "" },
+          guest: o.customer ? { 
+            name: o.customer.name || "", 
+            email: o.customer.email || "", 
+            phone: o.customer.phone || "" 
+          } : { name: "", email: "", phone: "" },
           tickets: (o.items || []).map(item => ({
             id: item.product?.id || item.product_id || item.id,
             name: item.product?.name || item.name || item.product?.title || "",
@@ -61,6 +66,7 @@ const OrderConfirmation = () => {
   if (!order) return <div className="container py-5">No order found.</div>;
 
 
+
   return (
     <div className="container py-5">
       <div className="row justify-content-center">
@@ -81,7 +87,7 @@ const OrderConfirmation = () => {
               <div className="d-flex justify-content-between mb-4">
                 <div>
                   <h6 className="text-muted mb-1">Order ID</h6>
-                  <strong>{order.qr && order.qr.length ? order.qr[0].token : order.id}</strong>
+                  <strong>{order.uuid}</strong>
                 </div>
                 <div className="text-end">
                   <h6 className="text-muted mb-1">Date</h6>
@@ -122,7 +128,7 @@ const OrderConfirmation = () => {
 
                 <div className="bg-light p-3 d-inline-block rounded-4 shadow-sm">
                   <QRCode
-                    value={order.qr && order.qr.length ? order.qr[0].token : JSON.stringify(order)}
+                    value={order.qr && order.qr.length ? `${order.qr[0].token}|${order.uuid}` : JSON.stringify(order)}
                     size={150}
                   />
                 </div>
@@ -133,7 +139,7 @@ const OrderConfirmation = () => {
               </div>
 
               <div className="d-flex justify-content-center mt-4">
-                <button className="btn btn-danger px-4 py-2 rounded-3 shadow-sm btn-sm me-2" onClick={() => window.location.href = '/tickets'}>
+                <button className="btn btn-danger px-4 py-2 rounded-3 shadow-sm btn-sm me-2" onClick={() => window.location.href = '/home'}>
                   Back
                 </button>
                 <button
@@ -143,11 +149,13 @@ const OrderConfirmation = () => {
                       const element = document.getElementById('order-confirmation-card');
                       if (!element) return;
 
-                      // capture at higher scale for better quality
-                      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
-                      const imgData = canvas.toDataURL('image/png');
+                      // capture at medium scale with JPEG compression for balance
+                      const canvas = await html2canvas(element, { scale: 1.5, useCORS: true, logging: false });
+                      
+                      // Convert to JPEG with good quality compression
+                      const imgData = canvas.toDataURL('image/jpeg', 0.75); // 75% quality - good balance
 
-                      const pdf = new jsPDF('p', 'pt', 'a4');
+                      const pdf = new jsPDF('p', 'mm', 'a4');
                       const pdfWidth = pdf.internal.pageSize.getWidth();
                       const pdfHeight = pdf.internal.pageSize.getHeight();
 
@@ -157,22 +165,22 @@ const OrderConfirmation = () => {
                       };
 
                       const imgRatio = imgProps.width / imgProps.height;
-                      const renderedImgHeight = pdfWidth / imgRatio;
+                      const renderedImgHeight = (pdfWidth / imgRatio);
 
                       let heightLeft = renderedImgHeight;
                       let position = 0;
 
-                      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, renderedImgHeight);
+                      pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, renderedImgHeight);
                       heightLeft -= pdfHeight;
 
                       while (heightLeft > 0) {
                         position = heightLeft - renderedImgHeight;
                         pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, renderedImgHeight);
+                        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, renderedImgHeight);
                         heightLeft -= pdfHeight;
                       }
 
-                      pdf.save(`order-${order.id || 'confirmation'}.pdf`);
+                      pdf.save(`order-${order.uuid || 'confirmation'}.pdf`);
                     } catch (err) {
                       console.error('Failed to generate PDF', err);
                     }

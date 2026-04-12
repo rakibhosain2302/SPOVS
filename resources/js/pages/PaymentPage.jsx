@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 const PaymentPage = () => {
   const { method } = useParams();
   const navigate = useNavigate();
-  const { totalAmount, placeOrder, tickets, guestInfo, paymentMethod } = useCart();
+  const { totalAmount, placeOrder, products, customerInfo, paymentMethod } = useCart();
 
   const [selectedMobile, setSelectedMobile] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -15,11 +15,17 @@ const PaymentPage = () => {
 
   const handlePayment = async () => {
     try {
+      // Validate guestInfo exists
+      if (!customerInfo) {
+        toast.error("Please fill customer details first");
+        navigate("/customer-details");
+        return;
+      }
 
       const orderData = {
-        name: guestInfo.name,
-        phone: guestInfo.phone,
-        email: guestInfo.email,
+        name: customerInfo.name,
+        phone: customerInfo.phone,
+        email: customerInfo.email,
         terms: true,
 
         payment_method: method === "mobile" ? selectedMobile : "card",
@@ -29,12 +35,12 @@ const PaymentPage = () => {
           ? { number: mobileNumber }
           : { card_number: cardNumber },
 
-        items: tickets
-          .filter(ticket => ticket.quantity > 0)
-          .map(ticket => ({
-            product_id: ticket.id,
-            quantity: ticket.quantity,
-            price: ticket.price,
+        items: products
+          .filter(product => product.quantity > 0)
+          .map(product => ({
+            product_id: product.id,
+            quantity: product.quantity,
+            price: product.price,
           })),
       };
 
@@ -43,16 +49,18 @@ const PaymentPage = () => {
 
       toast.success("Payment Successfully");
 
+
       // Map server response to the shape our OrderConfirmation expects
       const respOrder = response.data.order || response.data;
 
       const mappedOrder = {
         id: respOrder.id,
+        uuid: respOrder.uuid || "",
         date: respOrder.order_date || respOrder.created_at || null,
         guest: {
-          name: respOrder.guest?.name || guestInfo?.name || "",
-          email: respOrder.guest?.email || guestInfo?.email || "",
-          phone: respOrder.guest?.phone || guestInfo?.phone || "",
+          name: respOrder.customer?.name || customerInfo?.name || "",
+          email: respOrder.customer?.email || customerInfo?.email || "",
+          phone: respOrder.customer?.phone || customerInfo?.phone || "",
         },
         tickets: (respOrder.items || orderData.items || []).map(item => ({
           id: item.product?.id || item.product_id || item.id,
@@ -64,12 +72,13 @@ const PaymentPage = () => {
         qr: respOrder.qr || respOrder.qr_codes || [],
       };
 
+
   // store the order in context and clear cart/guest info via placeOrder
   placeOrder(mappedOrder);
 
   // Clear localStorage keys manually for extra safety
-  localStorage.removeItem("tickets");
-  localStorage.removeItem("guestInfo");
+  localStorage.removeItem("products");
+  localStorage.removeItem("customerInfo");
   localStorage.removeItem("paymentMethod");
 
   // Reload the page so all components re-mount and show fresh state

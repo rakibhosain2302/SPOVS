@@ -26,7 +26,15 @@ import {
   ExpandMore,
   ShoppingCart,
   Forum,
-  DonutSmall
+  DonutSmall,
+  SecuritySharp,
+  SecurityUpdate,
+  SecurityOutlined,
+  SecurityTwoTone,
+  SystemSecurityUpdate,
+  Security,
+  Verified,
+  VerifiedSharp
 } from "@mui/icons-material";
 
 import api from "../../api/axios";
@@ -37,6 +45,7 @@ const drawerWidth = 240;
 export default function AdminLayout() {
   const [user, setUser] = useState(null);
   const [openProduct, setOpenProduct] = useState(false);
+  const [openVerification, setOpenVerification] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -103,6 +112,30 @@ export default function AdminLayout() {
             </ListItemIcon>
             <ListItemText primary="Orders" />
           </ListItemButton>
+
+          <ListItemButton onClick={() => setOpenVerification(!openVerification)}>
+            <ListItemIcon>
+              <SecurityOutlined />
+            </ListItemIcon>
+            <ListItemText primary="Verification" />
+            {openVerification ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={openVerification} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/verify-member">
+                <ListItemIcon>
+                  <VerifiedSharp />
+                </ListItemIcon>
+                <ListItemText primary="Verify Member" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/order-verify">
+                <ListItemIcon>
+                  <SecurityUpdate />
+                </ListItemIcon>
+                <ListItemText primary="Order Verify" />
+              </ListItemButton>
+            </List>
+          </Collapse>
 
           <ListItemButton onClick={() => setOpenProduct(!openProduct)}>
             <ListItemIcon>

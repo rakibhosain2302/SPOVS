@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Guest;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductMaster;
@@ -12,23 +12,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class BookingController extends Controller
+class OrderController extends Controller
 {
 
-    // Tickets Page → fetch tickets with price
-    public function tickets()
+    // Products Page → fetch products with price
+    public function products()
     {
         // Eager load the spec relation (note: relation is named `specs` on ProductMaster)
-        $tickets = ProductMaster::with('specification')->get();
+        $products = ProductMaster::with('specification')->get();
 
-        $formatted = $tickets->map(function ($ticket) {
-            $specName = optional($ticket->specification)->spec_name;
+        $formatted = $products->map(function ($product) {
+             $specName = optional($product->specification)->spec_name;
 
             return [
-                'id' => $ticket->id,
-                'name' => $specName ? $specName : $ticket->name,
-                'price' => $ticket->price,
-                'available_quantity' => $ticket->available_quantity,
+                'id' => $product->id,
+                'name' => $specName ? $specName : $product->name,
+                'price' => $product->price,
+                'available_quantity' => $product->available_quantity,
             ];
         });
 
@@ -60,7 +60,7 @@ class BookingController extends Controller
         try {
 
             // ✅ 1️⃣ Guest (avoid duplicate by phone)
-            $guest = Guest::firstOrCreate(
+            $guest = Customer::firstOrCreate(
                 ['phone' => $validated['phone']],
                 [
                     'name' => $validated['name'],
@@ -73,11 +73,11 @@ class BookingController extends Controller
 
             // ✅ 2️⃣ Create Order (initially pending) - set order_date
             $order = Order::create([
-                'guest_id' => $guest->id,
-                'total_amount' => 0,
+                'customer_id' => $guest->id,
+                'total' => 0,
                 'payment_method' => $validated['payment_method'],
                 'payment_details' => $validated['payment_details'],
-                'status' => 'completed',
+                'payment_status' => 'completed',
                 'order_date' => now(),
             ]);
 
@@ -100,13 +100,14 @@ class BookingController extends Controller
 
             // ✅ 4️⃣ Update total amount
             $order->update([
-                'total_amount' => $totalAmount
+                'total' => $totalAmount
             ]);
 
             // ✅ 5️⃣ Generate QR Token
             $token = 'QR-' . strtoupper(Str::random(12));
 
             QRCode::create([
+                'customer_id' => $guest->id,
                 'order_id' => $order->id,
                 'token' => $token,
                 'status' => 'valid'
@@ -114,8 +115,12 @@ class BookingController extends Controller
 
             DB::commit();
 
+            // Explicitly format the response to ensure uuid is included
+            $orderData = $order->load('items.product', 'customer', 'qr')->toArray();
+            $orderData['uuid'] = $order->uuid; // Ensure uuid is in response
+
             return response()->json([
-                'order' => $order->load('items.product', 'guest', 'qr'),
+                'order' => $orderData,
                 'message' => 'Order placed successfully'
             ]);
         } catch (\Exception $e) {
@@ -131,7 +136,9 @@ class BookingController extends Controller
     // Order Confirmation → show order by ID
     public function orderConfirmation($order_id)
     {
-        $order = Order::with('items.product', 'guest', 'qr')->findOrFail($order_id);
-        return response()->json($order);
+        $order = Order::with('items.product', 'customer', 'qr')->findOrFail($order_id);
+        $orderData = $order->toArray();
+        $orderData['uuid'] = $order->uuid; // Ensure uuid is in response
+        return response()->json($orderData);
     }
 }

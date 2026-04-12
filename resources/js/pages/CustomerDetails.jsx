@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 
-const GuestDetails = () => {
+const CustomerDetails = () => {
   const navigate = useNavigate();
-  const { guestInfo, setGuestInfo } = useCart();
+  const { customerInfo, setCustomerInfo } = useCart();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -16,10 +16,10 @@ const GuestDetails = () => {
 
 
   useEffect(() => {
-    if (guestInfo) {
-      setFormData(guestInfo);
+    if (customerInfo) {
+      setFormData(customerInfo);
     }
-  }, [guestInfo]);
+  }, [customerInfo]);
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -28,7 +28,7 @@ const GuestDetails = () => {
       [id]: type === "checkbox" ? checked : value,
     };
     setFormData(updatedFormData);
-    setGuestInfo(updatedFormData);
+    setCustomerInfo(updatedFormData);
   };
 
   const isFormValid =
@@ -128,4 +128,4 @@ const GuestDetails = () => {
   );
 };
 
-export default GuestDetails;
+export default CustomerDetails;

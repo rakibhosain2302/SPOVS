@@ -39,13 +39,13 @@ const NavBar = () => {
 
                             <li className="nav-item">
                                 <NavLink
-                                    to="/tickets"
+                                    to="/products"
                                     className={({ isActive }) =>
                                         "nav-link fw-semibold px-3 rounded-pill transition " +
                                         (isActive ? "active text-primary bg-light" : "text-light")
                                     }
                                 >
-                                    Tickets
+                                    Products
                                 </NavLink>
                             </li>
 
@@ -83,7 +83,7 @@ const NavBar = () => {
                                 (isActive ? "active text-white bg-primary" : "text-light")
                             }
                         >
-                            Buy Tickets
+                            Buy Now
                         </NavLink>
                     </div>
                 </div>
