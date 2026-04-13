@@ -128,14 +128,21 @@ const OrderConfirmation = () => {
 
                 <div className="bg-light p-3 d-inline-block rounded-4 shadow-sm">
                   <QRCode
-                    value={order.qr && order.qr.length ? `${order.qr[0].token}|${order.uuid}` : JSON.stringify(order)}
+                    value={order.qr && order.qr.length > 0 ? `${order.qr[0].token}|${order.uuid}` : JSON.stringify(order)}
                     size={150}
+                    level="H"
+                    includeMargin={true}
                   />
                 </div>
 
-                <p className="text-muted mt-3 mb-0">
-                  Please show this QR code at entry for validation.
+                <p className="text-muted small mt-3 mb-0">
+                  Scan this QR code at entry point for ticket verification
                 </p>
+                {order.qr && order.qr.length > 0 && (
+                  <p className="text-muted small mt-2 mb-0">
+                    <strong>Token:</strong> {order.qr[0].token}
+                  </p>
+                )}
               </div>
 
               <div className="d-flex justify-content-center mt-4">

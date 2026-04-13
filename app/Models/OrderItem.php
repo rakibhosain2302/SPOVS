@@ -18,4 +18,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(ProductMaster::class, 'product_id');
     }
+
+    public function verifies()
+    {
+        return $this->hasMany(OrderWiseItemVerify::class, 'item_id');
+    }
 }

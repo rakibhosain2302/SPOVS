@@ -43,6 +43,11 @@ class Order extends Model
         return $this->hasMany(QRCode::class, 'order_id');
     }
 
+    public function itemVerifies()
+    {
+        return $this->hasMany(OrderWiseItemVerify::class, 'order_id');
+    }
+
 
 
 
