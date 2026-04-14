@@ -10,13 +10,9 @@ use Illuminate\Http\Request;
 
 class VerifyController extends Controller
 {
-    /**
-     * Verify order by QR token and UUID
-     * Expected input format: QR-TOKEN|ORDER-UUID
-     */
+
     public function verifyByToken(Request $request, $tokenData)
     {
-        // Parse the token data (format: token|uuid)
         $parts = explode('|', $tokenData);
         
         if (count($parts) !== 2) {
@@ -28,7 +24,6 @@ class VerifyController extends Controller
 
         [$token, $orderUuid] = $parts;
 
-        // Find QR code by token
         $qr = QRCode::where('token', $token)->first();
 
         if (!$qr) {
@@ -38,7 +33,6 @@ class VerifyController extends Controller
             ], 404);
         }
 
-        // Verify the UUID matches
         $order = Order::where('uuid', $orderUuid)->first();
 
         if (!$order || $order->id !== $qr->order_id) {
@@ -64,7 +58,6 @@ class VerifyController extends Controller
             ], 200);
         }
 
-        // Get the first order item
         $orderItem = $order->items()->first();
 
         if (!$orderItem) {
@@ -74,11 +67,9 @@ class VerifyController extends Controller
             ], 400);
         }
 
-        // Calculate remaining quantity (based on unverified items)
         $verifiedQty = 0; // You can calculate this based on your verification logic
         $remaining = $orderItem->quantity - $verifiedQty;
 
-        // Valid and not used yet
         return response()->json([
             'status' => 'valid',
             'message' => 'Product is valid',
@@ -96,9 +87,7 @@ class VerifyController extends Controller
         ], 200);
     }
 
-    /**
-     * Mark a ticket as used
-     */
+    
     public function markAsUsed(Request $request, $tokenData)
     {
         // Parse the token data
