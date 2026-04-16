@@ -54,7 +54,7 @@ const OrderVerify = () => {
         setLoading(true);
         setOrderData(null);
         try {
-            const res = await axios.get(`/api/verify-ticket/${encodeURIComponent(ticketId.trim())}`);
+            const res = await axios.get(`/api/verify-order/${encodeURIComponent(ticketId.trim())}`);
             setOrderData(res.data);
             setSelectedQty(0);
             setModalOpen(true);
@@ -137,7 +137,7 @@ const OrderVerify = () => {
         if (!orderData || issuing) return;
         setIssuing(true);
         try {
-            const now = new Date().toISOString();
+            const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
             const payload = {
                 order_id: orderData.order_id,
                 item_id: orderData.item_id,
@@ -145,9 +145,8 @@ const OrderVerify = () => {
                 item_price: orderData.item_price,
                 item_name: orderData.item_name,
                 item_verifier_by: orderData.verifier_by ?? 'staff',
-                item_verify_at: now,
-                purcess_at: orderData.purcess_at ?? now,
-                updated_at: now,
+                item_verified_at: now,
+                purchased_at: orderData.purchased_at ?? now,
             };
             await axios.post('/api/order-item-verify', payload);
             addHistory(scannedToken, 'valid', orderData.name);

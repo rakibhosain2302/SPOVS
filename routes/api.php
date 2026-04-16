@@ -31,7 +31,9 @@ Route::post('/orders', [OrderController::class, 'placeOrder']);
 Route::get('/orders/{id}', [OrderController::class, 'orderConfirmation']);
 
 // Ticket verification routes (QR token format: token|uuid)
-Route::get('/verify-ticket/{tokenData}', [VerifyController::class, 'verifyByToken']);
+Route::get('/verify-order/{tokenData}', [VerifyController::class, 'verifyByToken']);
 Route::post('/verify-ticket/{tokenData}', [VerifyController::class, 'markAsUsed']);
+
+Route::post('/order-item-verify', [VerifyController::class, 'orderVerifyStore']);
 
 

@@ -151,7 +151,7 @@ class VerifyController extends Controller
     }
 
 
-    public function order_verify_store(Request $request){
+    public function orderVerifyStore(Request $request){
             $request->validate([
                 'order_id' => 'required|exists:orders,id',
                 'item_id' => 'required|exists:order_items,id',
