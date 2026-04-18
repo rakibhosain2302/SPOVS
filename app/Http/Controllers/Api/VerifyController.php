@@ -181,5 +181,84 @@ class VerifyController extends Controller
             ], 201);
     }
 
+    public function orderVerifyList()
+    {
+        $verifications = OrderWiseItemVerify::with(['order.customer', 'item.product'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $verifications
+        ], 200);
+    }
+
+    public function orderVerifyShow($id)
+    {
+        $verification = OrderWiseItemVerify::with(['order.customer', 'item.product'])->find($id);
+
+        if (!$verification) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Verification record not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $verification
+        ], 200);
+    }
+
+    public function orderVerifyUpdate(Request $request, $id)
+    {
+        $verification = OrderWiseItemVerify::find($id);
+
+        if (!$verification) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Verification record not found'
+            ], 404);
+        }
+
+        $request->validate([
+            'order_id' => 'sometimes|required|exists:orders,id',
+            'item_id' => 'sometimes|required|exists:order_items,id',
+            'item_quantity' => 'sometimes|required|integer|min:1',
+            'item_price' => 'sometimes|required|numeric|min:0',
+            'item_name' => 'sometimes|required|string|max:255',
+            'item_verifier_by' => 'nullable|string|max:255',
+            'item_verified_at' => 'sometimes|required|date',
+            'purchased_at' => 'sometimes|required|date',
+        ]);
+
+        $verification->update($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Verification record updated successfully',
+            'data' => $verification
+        ], 200);
+    }
+
+    public function orderVerifyDestroy($id)
+    {
+        $verification = OrderWiseItemVerify::find($id);
+
+        if (!$verification) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Verification record not found'
+            ], 404);
+        }
+
+        $verification->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Verification record deleted successfully'
+        ], 200);
+    }
+
 }
 

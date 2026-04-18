@@ -35,5 +35,9 @@ Route::get('/verify-order/{tokenData}', [VerifyController::class, 'verifyByToken
 Route::post('/verify-ticket/{tokenData}', [VerifyController::class, 'markAsUsed']);
 
 Route::post('/order-item-verify', [VerifyController::class, 'orderVerifyStore']);
+Route::get('/order-item-verify', [VerifyController::class, 'orderVerifyList']);
+Route::get('/order-item-verify/{id}', [VerifyController::class, 'orderVerifyShow']);
+Route::put('/order-item-verify/{id}', [VerifyController::class, 'orderVerifyUpdate']);
+Route::delete('/order-item-verify/{id}', [VerifyController::class, 'orderVerifyDestroy']);
 
 
