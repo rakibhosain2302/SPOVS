@@ -104,13 +104,8 @@ export default function OrderVerifyList() {
     };
 
     return (
-        <Container className="mt-5">
-            <Row className="mb-4">
-                <Col>
-                    <h2>Order Verification List</h2>
-                </Col>
-            </Row>
-
+        <div className="mt-1">
+            <h2 className='mb-4'>Order Verification List</h2>
             {/* Toast Notification */}
             <Toast
                 show={showToast}
@@ -318,6 +313,6 @@ export default function OrderVerifyList() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </Container>
+        </div>
     );
 }

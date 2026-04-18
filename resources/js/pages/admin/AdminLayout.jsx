@@ -34,7 +34,8 @@ import {
   SystemSecurityUpdate,
   Security,
   Verified,
-  VerifiedSharp
+  VerifiedSharp,
+  ListAltSharp
 } from "@mui/icons-material";
 
 import api from "../../api/axios";
@@ -133,6 +134,12 @@ export default function AdminLayout() {
                   <SecurityUpdate />
                 </ListItemIcon>
                 <ListItemText primary="Order Verify" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }} component={Link} to="/admin/order-verify-list">
+                <ListItemIcon>
+                  <ListAltSharp />
+                </ListItemIcon>
+                <ListItemText primary="Order VerifyList" />
               </ListItemButton>
             </List>
           </Collapse>

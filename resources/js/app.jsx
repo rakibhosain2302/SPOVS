@@ -27,6 +27,7 @@ import CustomerDetails from "./pages/CustomerDetails";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import OrderVerify from "./pages/admin/OrderVerify";
+import OrderVerifyList from "./pages/admin/OrderVerifyList";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -76,6 +77,7 @@ const App = () => (
                         <Route path="specification" element={<SpecificationForm />} />
                         <Route path="master" element={<ProductMasterForm />} />
                         <Route path="order-verify" element={<OrderVerify />} />
+                        <Route path="order-verify-list" element={<OrderVerifyList />} />
                     </Route>
 
                     <Route
