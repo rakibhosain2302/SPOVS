@@ -151,9 +151,17 @@ const OrderVerify = () => {
             await axios.post('/api/order-item-verify', payload);
             addHistory(scannedToken, 'valid', orderData.name);
             setToast({ type: 'success', msg: `Issued ${selectedQty} unit${selectedQty > 1 ? 's' : ''} of ${orderData.item_name}` });
+            
+            // Reset everything and close modal
             setModalOpen(false);
             setScannedToken(null);
             setOrderData(null);
+            setSelectedQty(0);
+            
+            // Auto-start camera again for next scan
+            setTimeout(() => {
+                if (!scanning) startScan();
+            }, 1000);
         } catch (err) {
             setToast({ type: 'error', msg: err.response?.data?.message || 'Failed to issue product.' });
         } finally {
@@ -179,6 +187,7 @@ const OrderVerify = () => {
         valid: { label: 'Valid order', cls: 'success' },
         used: { label: 'Already used', cls: 'warning' },
         invalid: { label: 'Invalid order', cls: 'danger' },
+        error: { label: 'Error', cls: 'danger' },
     };
 
     const remaining = orderData?.remaining ?? 0;

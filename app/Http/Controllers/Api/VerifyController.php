@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\OrderWiseItemVerify;
 use App\Models\QRCode;
 use Illuminate\Http\Request;
@@ -62,14 +63,32 @@ class VerifyController extends Controller
 
         if (!$orderItem) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'invalid',
                 'message' => 'No items found in this order'
             ], 400);
         }
 
-        $verifiedQty = 0; // You can calculate this based on your verification logic
+        // Calculate already verified quantity
+        $verifiedQty = OrderWiseItemVerify::where('item_id', $orderItem->id)->sum('item_quantity');
         $remaining = $orderItem->quantity - $verifiedQty;
 
+        // Check if item quantity is 0 or less
+        if ($orderItem->quantity <= 0) {
+            return response()->json([
+                'status' => 'invalid',
+                'message' => 'This product has no quantity remaining'
+            ], 400);
+        }
+
+        // Check if all items have been verified
+        if ($remaining <= 0) {
+            return response()->json([
+                'status' => 'invalid',
+                'message' => 'All quantities of this product have already been verified'
+            ], 400);
+        }
+
+        // Everything is valid
         return response()->json([
             'status' => 'valid',
             'message' => 'Product is valid',
@@ -173,6 +192,12 @@ class VerifyController extends Controller
             $verify->item_verified_at = $request->item_verified_at;
             $verify->purchased_at = $request->purchased_at;
             $verify->save();
+
+            // Reduce quantity from order_items table
+            $orderItem = OrderItem::find($request->item_id);
+            if ($orderItem) {
+                $orderItem->decrement('quantity', $request->item_quantity);
+            }
     
             return response()->json([
                 'status' => 'success',
