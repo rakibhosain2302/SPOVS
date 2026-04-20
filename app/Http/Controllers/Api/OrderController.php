@@ -35,6 +35,22 @@ class OrderController extends Controller
         return response()->json($formatted);
     }
 
+    // List all orders with items
+    public function listOrders()
+    {
+        $orders = Order::with('items.product', 'customer', 'qr')
+            ->orderBy('order_date', 'desc')
+            ->get();
+
+        $formatted = $orders->map(function ($order) {
+            $orderData = $order->toArray();
+            $orderData['uuid'] = $order->uuid;
+            return $orderData;
+        });
+
+        return response()->json($formatted);
+    }
+
 
 
     // Checkout & Payment → save order + order items + generate QR

@@ -27,6 +27,7 @@ Route::apiResource('master_products', ProductMasterController::class);
 
 
 Route::get('/products-list', [OrderController::class, 'products']);
+Route::get('/orders', [OrderController::class, 'listOrders']);
 Route::post('/orders', [OrderController::class, 'placeOrder']);
 Route::get('/orders/{id}', [OrderController::class, 'orderConfirmation']);
 

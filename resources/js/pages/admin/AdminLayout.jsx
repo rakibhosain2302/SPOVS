@@ -107,7 +107,7 @@ export default function AdminLayout() {
             <ListItemText primary="Dashboard" />
           </ListItemButton>
 
-          <ListItemButton>
+          <ListItemButton component={Link} to="/admin/orders">
             <ListItemIcon>
               <ShoppingCart />
             </ListItemIcon>

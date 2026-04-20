@@ -26,6 +26,7 @@ import Products from "./pages/Products";
 import CustomerDetails from "./pages/CustomerDetails";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import OrderList from "./pages/admin/OrderList";
 import OrderVerify from "./pages/admin/OrderVerify";
 import OrderVerifyList from "./pages/admin/OrderVerifyList";
 
@@ -78,6 +79,7 @@ const App = () => (
                         <Route path="master" element={<ProductMasterForm />} />
                         <Route path="order-verify" element={<OrderVerify />} />
                         <Route path="order-verify-list" element={<OrderVerifyList />} />
+                        <Route path="orders" element={<OrderList />} />
                     </Route>
 
                     <Route
