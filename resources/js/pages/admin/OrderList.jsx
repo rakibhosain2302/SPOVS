@@ -1,5 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+
+const formatDate = (value) => {
+    if (!value) return 'N/A';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return 'N/A';
+    return parsed.toLocaleDateString('en-BD');
+};
+
+const formatMoney = (value) => {
+    const amount = Number.parseFloat(value);
+    return Number.isNaN(amount) ? '0.00' : amount.toFixed(2);
+};
 
 export default function OrderList() {
     const [orders, setOrders] = useState([]);
@@ -14,7 +26,7 @@ export default function OrderList() {
         try {
             setLoading(true);
             const response = await axios.get('/api/orders');
-            setOrders(response.data);
+            setOrders(response.data || []);
             setError(null);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to load orders');
@@ -24,175 +36,117 @@ export default function OrderList() {
         }
     };
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-xl text-gray-600">Loading orders...</div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-xl text-red-600">{error}</div>
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-gray-100 py-12 px-4">
-            <div className="max-w-7xl mx-auto">
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Orders</h1>
-                    <p className="text-gray-600">Total Orders: {orders.length}</p>
+        <div className="container-fluid px-0">
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">
+                <div>
+                    <h2 className="mb-1">Orders</h2>
+                    <p className="text-muted mb-0">Total Orders: {orders.length}</p>
                 </div>
-
-                {orders.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow p-6 text-center text-gray-600">
-                        No orders found
-                    </div>
-                ) : (
-                    <div className="space-y-6">
-                        {orders.map((order) => (
-                            <div
-                                key={order.id}
-                                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                            >
-                                {/* Order Header */}
-                                <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                        <div>
-                                            <p className="text-sm font-semibold opacity-90">Order ID</p>
-                                            <p className="text-2xl font-bold">{order.id}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold opacity-90">Customer</p>
-                                            <p className="text-lg font-semibold">{order.customer?.name}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold opacity-90">Order Date</p>
-                                            <p className="text-lg">
-                                                {new Date(order.order_date).toLocaleDateString('en-BD')}
-                                            </p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-sm font-semibold opacity-90">Total Amount</p>
-                                            <p className="text-2xl font-bold">
-                                                ৳ {parseFloat(order.total).toFixed(2)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Customer & Order Details */}
-                                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <p className="text-sm text-gray-600">Phone</p>
-                                            <p className="font-semibold text-gray-900">{order.customer?.phone}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-600">Email</p>
-                                            <p className="font-semibold text-gray-900">
-                                                {order.customer?.email || 'N/A'}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-600">Payment Method</p>
-                                            <p className="font-semibold text-gray-900">{order.payment_method}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Order Items Table */}
-                                <div className="px-6 py-4">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Items</h3>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full">
-                                            <thead>
-                                                <tr className="border-b-2 border-gray-300">
-                                                    <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                                                        Product
-                                                    </th>
-                                                    <th className="text-center py-3 px-4 font-semibold text-gray-700">
-                                                        Quantity
-                                                    </th>
-                                                    <th className="text-right py-3 px-4 font-semibold text-gray-700">
-                                                        Price
-                                                    </th>
-                                                    <th className="text-right py-3 px-4 font-semibold text-gray-700">
-                                                        Subtotal
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {order.items && order.items.length > 0 ? (
-                                                    order.items.map((item, idx) => (
-                                                        <tr
-                                                            key={idx}
-                                                            className="border-b border-gray-200 hover:bg-blue-50 transition-colors"
-                                                        >
-                                                            <td className="py-3 px-4 text-gray-900">
-                                                                {item.product?.name || 'N/A'}
-                                                            </td>
-                                                            <td className="text-center py-3 px-4 text-gray-900">
-                                                                {item.quantity}
-                                                            </td>
-                                                            <td className="text-right py-3 px-4 text-gray-900">
-                                                                ৳ {parseFloat(item.price).toFixed(2)}
-                                                            </td>
-                                                            <td className="text-right py-3 px-4 font-semibold text-gray-900">
-                                                                ৳{' '}
-                                                                {(item.quantity * parseFloat(item.price)).toFixed(2)}
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                ) : (
-                                                    <tr>
-                                                        <td colSpan="4" className="text-center py-4 text-gray-500">
-                                                            No items in this order
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                {/* QR Code Info */}
-                                {order.qr && order.qr.length > 0 && (
-                                    <div className="px-6 py-4 bg-green-50 border-t border-green-200">
-                                        <p className="text-sm font-semibold text-green-900 mb-2">QR Code Token</p>
-                                        <p className="font-mono text-sm text-green-700 break-all">
-                                            {order.qr[0]?.token}
-                                        </p>
-                                        <p className="text-xs text-green-600 mt-1">
-                                            Status: {order.qr[0]?.status || 'N/A'}
-                                        </p>
-                                    </div>
-                                )}
-
-                                {/* Payment Status */}
-                                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                                    <p className="text-sm font-semibold text-gray-700">Payment Status</p>
-                                    <span
-                                        className={`inline-block mt-2 px-4 py-2 rounded-full text-white font-semibold ${
-                                            order.payment_status === 'completed'
-                                                ? 'bg-green-500'
-                                                : order.payment_status === 'pending'
-                                                ? 'bg-yellow-500'
-                                                : 'bg-red-500'
-                                        }`}
-                                    >
-                                        {order.payment_status?.toUpperCase() || 'UNKNOWN'}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                <button className="btn btn-outline-primary" onClick={fetchOrders} type="button">
+                    Refresh
+                </button>
             </div>
+
+            {loading && (
+                <div className="card border-0 shadow-sm">
+                    <div className="card-body text-center py-5">
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <p className="text-muted mt-3 mb-0">Loading orders...</p>
+                    </div>
+                </div>
+            )}
+
+            {!loading && error && (
+                <div className="alert alert-danger" role="alert">
+                    {error}
+                </div>
+            )}
+
+            {!loading && !error && (
+                <div className="card border-0 shadow-sm">
+                    <div className="table-responsive">
+                        <table className="table table-hover align-middle mb-0">
+                            <thead className="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Contact</th>
+                                    <th>Items</th>
+                                    <th className="text-end">Total</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>QR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.length > 0 ? (
+                                    orders.map((order) => (
+                                        <tr key={order.id}>
+                                            <td className="fw-semibold">#{order.id}</td>
+                                            <td>{formatDate(order.order_date)}</td>
+                                            <td>
+                                                <div className="fw-semibold">{order.customer?.name || 'N/A'}</div>
+                                                <small className="text-muted">{order.customer?.email || 'No email'}</small>
+                                            </td>
+                                            <td>{order.customer?.phone || 'N/A'}</td>
+                                            <td>
+                                                {order.items?.length ? (
+                                                    <div>
+                                                        <div className="fw-semibold">{order.items.length} items</div>
+                                                        <small className="text-muted d-block">
+                                                            {order.items
+                                                                .slice(0, 2)
+                                                                .map((item) => item.product?.name || 'N/A')
+                                                                .join(', ')}
+                                                        </small>
+                                                        {order.items.length > 2 && (
+                                                            <small className="text-muted">+{order.items.length - 2} more</small>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted">No items</span>
+                                                )}
+                                            </td>
+                                            <td className="text-end fw-semibold">৳ {formatMoney(order.total)}</td>
+                                            <td>{order.payment_method || 'N/A'}</td>
+                                            <td>
+                                                <span
+                                                    className={`badge text-uppercase ${
+                                                        order.payment_status === 'completed'
+                                                            ? 'bg-success'
+                                                            : order.payment_status === 'pending'
+                                                            ? 'bg-warning text-dark'
+                                                            : 'bg-danger'
+                                                    }`}
+                                                >
+                                                    {order.payment_status || 'unknown'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {order.qr?.[0]?.token ? (
+                                                    <span className="badge bg-info text-dark">{order.qr[0].status || 'valid'}</span>
+                                                ) : (
+                                                    <span className="text-muted">N/A</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="9" className="text-center text-muted py-4">
+                                            No orders found
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
